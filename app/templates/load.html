@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <h1>Load csv</h1>
+
+    <input type="file" id="bank-statement-csv" name="bank-statement-csv" accept=".csv" />
+
+{% endblock %}

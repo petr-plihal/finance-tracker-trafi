@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ super() }} <!-- Preserves head block contents from base.html, instead of overwriting everyhing in head block -->
+    <style type="text/css">
+    .important { color: #0080ff; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Home page</h1>
+
+    <a href="{{ url_for('load_csv') }}">Link to load page</a>
+
+{% endblock %}
