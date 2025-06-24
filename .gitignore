@@ -176,3 +176,6 @@ cython_debug/
 
 # VSCode settings
 **/.vscode/
+
+# Tmp drawio files
+**/.$*.drawio.bkp
