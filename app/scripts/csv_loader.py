@@ -8,7 +8,7 @@ class csv_loader:
     def __init__(self, csv_path: str):
 
         # Load data with minimal column set
-        self.dataframe = pd.read_csv(
+        df = pd.read_csv(
             csv_path,
             sep=';', 
             header=16,
@@ -20,18 +20,32 @@ class csv_loader:
             ]
         )
 
-        # Convert columns to appropriate types
+        # Normalize the KB bank column names into internal column names
+        norm_cols = {
+            "Datum provedeni": "date",
+            "Nazev protiuctu": "contra_account_name",
+            "Castka": "amount",
+            "Identifikace transakce": "transaction_id"
+        }
+        df = df.rename(columns=norm_cols)
 
-        self.dataframe["Datum provedeni"] = pd.to_datetime(
-            self.dataframe["Datum provedeni"],
+        # Type cast date column to datetime
+        df["date"] = pd.to_datetime(
+            df["date"],
             format="%d.%m.%Y",
             )
         
-        self.dataframe["Castka"] = self.dataframe["Castka"].replace(",", ".", regex=True)
-
-        self.dataframe["Castka"] = pd.to_numeric(
-            self.dataframe["Castka"],
+        # Type cast amount column to numeric (floats)
+        df["amount"] = df["amount"].replace(",", ".", regex=True)
+        df["amount"] = pd.to_numeric(
+            df["amount"],
         )
+
+        # Sort rows by date
+        df = df.sort_values(by="date", ascending=False)
+
+        # Save "Base" dataframe for later use
+        self.dataframe = df
 
     def get_dataframe(self) -> pd.DataFrame:
         return self.dataframe
