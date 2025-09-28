@@ -1,0 +1,22 @@
+services:
+
+    database:
+        container_name: trafi-database
+        image: mysql:9.0
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: password123
+            MYSQL_DATABASE: trafi-dev
+            MYSQL_USER: admin-dev
+            MYSQL_PASSWORD: password123
+        ports:
+            - "3307:3306"
+
+    backend:
+        container_name: trafi-backend
+        build: .
+        ports:
+            - "8000:5000"
+        depends_on:
+            - database
+

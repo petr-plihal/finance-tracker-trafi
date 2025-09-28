@@ -26,3 +26,11 @@ flask run --debug
 ```
 
 The debug option allows for Python code execution from the browser, shows debug info in the browser and automatically refreshes when changes are made to code.
+
+# Useful sources used during development
+
+- [Flask documentation](https://flask.palletsprojects.com/en/stable/)
+- [Docker documentations](https://docs.docker.com/)
+- [Flask SQLAlchemy documentation](https://flask-sqlalchemy.readthedocs.io/en/stable/)
+
+- [MySQL database manual setup](https://hub.docker.com/_/mysql)
