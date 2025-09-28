@@ -6,7 +6,7 @@ from loading.csv_loader import csv_loader
 def main():
 
     # 1. Data Collection (Acquisition) & Data Cleaning (Preprocessing)
-    loader = csv_loader("app/scripts/test_data/Vypis_354650030277_20240115_20250710.csv")
+    loader = csv_loader("test_data/Vypis_354650030277_20240115_20250710.csv")
     data = loader.get_dataframe()
 
     # 2. Data Transformation (Structuring)

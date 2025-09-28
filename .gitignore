@@ -180,3 +180,6 @@ cython_debug/
 # Tmp drawio files
 **/.$*.drawio.bkp
 **/.$*.drawio.dtmp
+
+# Directory for test data files
+test_data/*
