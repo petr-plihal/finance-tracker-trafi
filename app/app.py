@@ -1,18 +1,60 @@
 from flask import Flask
 from flask import render_template # Working with Jinja2/basic html files from /templates folder
-from flask import request # For accessing data sent to the app
 
-# from models import db
+####################
+###### CONFIG ######
+####################
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin-dev:password123@database:3306/trafi-dev"
 
-# db.init_app(app)
+####################
+##### MAIN PAGE ####
+####################
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route("/load_csv")
+####################
+### FILE UPLOADS ###
+####################
+
+# For accessing data sent to the app
+import os
+from flask import request, send_from_directory
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = "uploads"
+ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif", "csv"}
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000 # Max size of uploaded files is 16MB
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route("/load_csv", methods=["POST", "GET"])
 def load_csv():
+    if request.method == 'POST':
+
+        # check if the post request has the file part
+        if 'bank-statement-csv' not in request.files:
+            print("No file part")
+        file = request.files['bank-statement-csv']
+
+        # If the user does not select a file, the browser submits an empty file without a filename
+        if file.filename == '':
+            print('No selected file')
+        
+        # If the file has valid name and extension server saves it in dedicated folder for later use
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     return render_template("load.html")
+
+@app.route('/uploads/<name>')
+def download_file(name):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], name)

@@ -8,7 +8,14 @@
 
 {% block content %}
     <h1>Load csv</h1>
-
-    <input type="file" id="bank-statement-csv" name="bank-statement-csv" accept=".csv" />
+    <form method="post" enctype="multipart/form-data">
+        <input 
+        type="file" 
+        id="bank-statement-csv" 
+        name="bank-statement-csv" 
+        accept=".csv" 
+        />
+        <input type = "submit" value = "submit" id = "submit" />
+    </form>
 
 {% endblock %}
