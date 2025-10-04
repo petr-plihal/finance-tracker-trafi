@@ -25,6 +25,7 @@ import os
 from flask import request, send_from_directory
 from werkzeug.utils import secure_filename
 
+if not os.path.exists("uploads"): os.makedirs("uploads")
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif", "csv"}
 
