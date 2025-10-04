@@ -56,6 +56,11 @@ def load_csv():
 
     return render_template("load.html")
 
+@app.route("/uploads", methods=["GET"])
+def uploads():
+    uploads_list: list = os.listdir("uploads")
+    return render_template("uploads.html", uploads_list=uploads_list)
+
 @app.route('/uploads/<name>')
 def download_file(name):
     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
