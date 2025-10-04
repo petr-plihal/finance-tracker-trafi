@@ -5,11 +5,20 @@
     {% block head %}
         <meta charset="UTF-8">
         <title>{% block title %}{% endblock %} - Trafi</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     {% endblock %}
     </head>
 
     <body>
-    <!-- TODO: General navbar -->
+
+    <div class="main-navbar">
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('uploads') }}">Uploaded files</a></li>
+            <li><a href="{{ url_for('load_csv') }}">Load csv file</a></li>
+        </ul>
+    </div>
+
     {% block content %}
     {% endblock %}
     <!-- TODO: Footer -->
