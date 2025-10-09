@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Loaded files{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>List of uploaded files for download</h1>
+    
+    <table>
+        <tr><td>Uploaded files</td></tr>
+        {% for file in uploads_list %}
+        <tr>
+            <td>
+                <a href="uploads/{{ file }}">{{ file }}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

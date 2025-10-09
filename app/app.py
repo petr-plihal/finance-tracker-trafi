@@ -25,6 +25,7 @@ import os
 from flask import request, send_from_directory
 from werkzeug.utils import secure_filename
 
+if not os.path.exists("uploads"): os.makedirs("uploads")
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif", "csv"}
 
@@ -54,6 +55,11 @@ def load_csv():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     return render_template("load.html")
+
+@app.route("/uploads", methods=["GET"])
+def uploads():
+    uploads_list: list = os.listdir("uploads")
+    return render_template("uploads.html", uploads_list=uploads_list)
 
 @app.route('/uploads/<name>')
 def download_file(name):

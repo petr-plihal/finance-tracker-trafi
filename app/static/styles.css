@@ -1,0 +1,10 @@
+.main-navbar ul {
+    list-style-type: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+.main-navbar li {
+    float: left;
+    padding-right: 5%;
+}
