@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}ETC calculator{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+    .important { color: #0080ff; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Calculator</h1>
+    <form action="">
+        <label for="gross_salary_employee">Gross salary as an employee:</label><br>
+        <input type="text" id="gross_salary_employee" name="gross_salary_employee" value="27000"><br>
+
+        <label for="gross_salary_self_employed">Gross salary as self-employed:</label><br>
+        <input type="text" id="gross_salary_self_employed" name="gross_salary_self_employed" value="41000"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

@@ -64,3 +64,12 @@ def uploads():
 @app.route('/uploads/<name>')
 def download_file(name):
     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+
+
+####################
+#### CALCULATORS ###
+####################
+
+@app.route('/calculators/employment_type_comparison')
+def employment_type_comparison():
+    return render_template("calculators/employment_type_comparison/index.html")
