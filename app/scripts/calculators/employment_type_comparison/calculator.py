@@ -1,7 +1,11 @@
-from config import EmployeeConfig, OSVCConfig, CommonConfig
+from app.scripts.calculators.employment_type_comparison.config import EmployeeConfig, OSVCConfig, CommonConfig
+from dataclasses import dataclass
+from app.models import NetSalaryInfo, ComparedEmploymentTypes
 
 # NOTE: Kalkulace jsou platné pouze v souvislosti s daty a zákony České Republiky.
 # NOTE: Samostatná výdělečná činnost může být hlavní nebo vedlejší. Tento skript počítá pouze s hlavní (takže placení důchodového pojištění je povinné).
+
+# TODO: later the classes themselves could be returning `NetSalaryInfo` dataclass
 
 class Zamestnanec:
     def __init__(self, mesicni_hruba_mzda):
@@ -48,13 +52,34 @@ class OSVC:
     def __init__(self, mesicni_hruba_mzda):
         pass
 
+class Comparer:
+    """Utility class for comparing employment types."""
+
+    @staticmethod
+    def compare(salary_gross_employee: int, salary_gross_self_employed: int) -> ComparedEmploymentTypes:
+
+        employee = Zamestnanec(salary_gross_employee)
+        salary_info_employee = NetSalaryInfo(
+            gross = salary_gross_employee,
+            net   = employee.get_mesicni_cista_mzda()
+        )
+
+        # TODO: remove dummy values
+        self_employed = OSVC(salary_gross_self_employed)
+        salary_info_self_employed = NetSalaryInfo(
+            gross = 0,
+            net   = 0
+        )
+
+        employment_types_infos = ComparedEmploymentTypes(
+            employee = salary_info_employee,
+            self_employed = salary_info_self_employed
+        )
+
+        return employment_types_infos
 
 def main():
-    hruba_mzda_OSVC = 41000
-    hruba_mzda_zamestnanec = 27000
-
-    zamestnanec = Zamestnanec(hruba_mzda_zamestnanec)
-    osvc = OSVC(hruba_mzda_OSVC)
+    pass
 
 if __name__=="__main__":
     main()
