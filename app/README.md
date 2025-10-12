@@ -19,10 +19,9 @@
 
 ## Run the application locally
 
-Go into the `app/` directory, and run the Flask application:
+Run the Flask application:
 ```bash
-cd app
-flask run --debug
+flask --app ./app/app.py run --debug
 ```
 
 The debug option allows for Python code execution from the browser, shows debug info in the browser and automatically refreshes when changes are made to code.
