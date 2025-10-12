@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+# TODO: This dataclass could later contain a name of the employment type, since there are more than 2 types.
 @dataclass
 class NetSalaryInfo:
     gross: float
