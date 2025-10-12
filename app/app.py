@@ -70,6 +70,22 @@ def download_file(name):
 #### CALCULATORS ###
 ####################
 
-@app.route('/calculators/employment_type_comparison')
+from app.scripts.calculators.employment_type_comparison.calculator import Comparer 
+from app.models.salary import NetSalaryInfo, ComparedEmploymentTypes
+
+@app.route('/calculators/employment_type_comparison', methods=["GET", "POST"])
 def employment_type_comparison():
-    return render_template("calculators/employment_type_comparison/index.html")
+    result = None
+
+    # Only trigger calculation if form is submitted, not even when it gets loaded without posting
+    if request.method == "POST":
+
+        salary_gross_employee = request.values.get("salary_gross_employee")
+        salary_gross_self_employed = request.values.get("salary_gross_self_employed")
+
+        # TODO: These type of things could be logged? Figure out if it would be useful. Not necessarily for the type, but input values and result might be good to know.
+        # print(f"salary_gross_self_employed is '{salary_gross_self_employed}' of type {type(salary_gross_self_employed)}")
+
+        result = Comparer.compare(float(salary_gross_employee), float(salary_gross_self_employed))
+
+    return render_template("calculators/employment_type_comparison/index.html", result=result)
