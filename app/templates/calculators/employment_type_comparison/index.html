@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}ETC calculator{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+    .important { color: #0080ff; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Calculator</h1>
+    <h2>Inputs</h2>
+    <form action="" method="post">
+        <label for="salary_gross_employee">Gross salary as an employee:</label><br>
+        <input type="text" id="salary_gross_employee" name="salary_gross_employee" value="27000"><br>
+
+        <label for="salary_gross_self_employed">Gross salary as self-employed:</label><br>
+        <input type="text" id="salary_gross_self_employed" name="salary_gross_self_employed" value="41000"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if result %}
+        <h2>Results</h2>
+        <table>
+            <caption>Net salaries</caption>
+            <thead>
+                <tr>
+                    <th>Employment type</th>
+                    <th>Gross salary</th>
+                    <th>Net salary</th>
+                </tr>
+                <tr>
+                    <th> Employee </th>
+                    <th> {{result.employee.gross}} kč </th>
+                    <th> {{result.employee.net}} kč </th>
+                </tr>
+                <tr>
+                    <th> Self-employed </th>
+                    <th> {{result.self_employed.gross}} kč </th>
+                    <th> {{result.self_employed.net}} kč </th>
+                </tr>
+            </thead>
+        </table>
+    {% endif %}
+{% endblock %}
