@@ -1,5 +1,7 @@
 from flask import Flask
 from flask import render_template # Working with Jinja2/basic html files from /templates folder
+from flask import redirect # To avoid request re-submissions and allow clean history after POST requests
+from flask import url_for # Decoupling the internal function name from the external URL path
 
 ####################
 ###### CONFIG ######
@@ -7,6 +9,8 @@ from flask import render_template # Working with Jinja2/basic html files from /t
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin-dev:password123@database:3306/trafi-dev"
+
+app.config["SELECTED_FILENAME"] = "" # TODO: Very bad, this means all users share the same file (after the first user defines this variable) ew
 
 ####################
 ##### MAIN PAGE ####
@@ -58,13 +62,32 @@ def load_csv():
 
 @app.route("/uploads", methods=["GET"])
 def uploads():
-    uploads_list: list = os.listdir("uploads")
+    uploads_list: list = os.listdir(app.config["UPLOAD_FOLDER"])
     return render_template("uploads.html", uploads_list=uploads_list)
 
 @app.route('/uploads/<name>')
 def download_file(name):
     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
 
+####################
+# SELECT INPUT DATA
+####################
+
+@app.route("/select_input", methods=["GET", "POST"])
+def select_input():
+    if request.method == "GET":
+        uploads_list: list = os.listdir(app.config["UPLOAD_FOLDER"])
+        return render_template("select_input.html", uploads_list=uploads_list, selected_filename=app.config["SELECTED_FILENAME"])
+    if request.method == "POST":
+        selected_filename = request.form.get('filename')
+        
+        if selected_filename:
+            # NOTE: A session might be used instead
+            app.config["SELECTED_FILENAME"] = selected_filename
+            # NOTE: There should be a) validate file exists, b) logger
+            print(f"User selected: {selected_filename} file as an input")
+        
+        return redirect(url_for('select_input'))
 
 ####################
 #### CALCULATORS ###
