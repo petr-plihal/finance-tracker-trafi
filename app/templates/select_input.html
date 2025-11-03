@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Choose input file{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>List of files available as an input</h1>
+
+    {% if selected_filename %}
+        <p><strong>Currently selected file: {{ selected_filename }}</strong></p>
+    {% endif %}
+    
+    {% if uploads_list %}
+        <table>
+            <tr><td>Uploaded files</td></tr>
+            {% for file in uploads_list %}
+                <form method="post" action="/select_input">
+                    <tr>
+                        <td>
+                            <a href="uploads/{{ file }}">{{ file }}</a>
+                        </td>
+                        <td>
+                            <button type="submit" name="filename" value="{{ file }}">
+                                Use this file
+                            </button>
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>To choose an input file, <a href="/load_csv">first upload it</a></p>
+    {% endif %}
+
+
+{% endblock %}
