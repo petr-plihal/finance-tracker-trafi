@@ -73,6 +73,11 @@ def download_file(name):
 # SELECT INPUT DATA
 ####################
 
+import pandas as pd
+app.config['ANALYSIS_DATAFRAME'] = None
+
+from app.scripts.loading.csv_loader import CSVLoader
+
 @app.route("/select_input", methods=["GET", "POST"])
 def select_input():
     if request.method == "GET":
@@ -86,6 +91,8 @@ def select_input():
             app.config["SELECTED_FILENAME"] = selected_filename
             # NOTE: There should be a) validate file exists, b) logger
             print(f"User selected: {selected_filename} file as an input")
+
+            app.config['ANALYSIS_DATAFRAME'] = CSVLoader(app.config["UPLOAD_FOLDER"]+"/"+app.config["SELECTED_FILENAME"]).get_dataframe()
         
         return redirect(url_for('select_input'))
 
