@@ -10,7 +10,7 @@ class CSVLoader:
         # Load data with minimal column set
         df = pd.read_csv(
             csv_path,
-            encoding="latin-1",
+            encoding="cp1250", # TODO: 
             sep=';', 
             header=16,
             usecols=[
