@@ -148,6 +148,15 @@ def get_records():
     return jsonify(response_data)
 
 ####################
+##### ANALYSIS #####
+####################
+
+@app.route("/analysis", methods=["GET"])
+def analysis():
+    return render_template("analysis.html")
+
+
+####################
 #### CALCULATORS ###
 ####################
 
