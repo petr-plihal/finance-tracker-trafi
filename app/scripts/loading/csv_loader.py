@@ -1,6 +1,6 @@
 import pandas as pd
 
-class csv_loader:
+class CSVLoader:
 
     file_path: str
     dataframe: pd.DataFrame

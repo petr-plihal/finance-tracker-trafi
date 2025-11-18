@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <h1>Analysis page</h1>
+    <div id="data-container">
+        <p>Loading records...</p>
+    </div>
+    <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+{% endblock %}
