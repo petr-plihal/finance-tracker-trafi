@@ -97,6 +97,57 @@ def select_input():
         return redirect(url_for('select_input'))
 
 ####################
+######## API #######
+####################
+from flask import abort, jsonify
+
+@app.route("/api/records", methods=["GET"])
+def get_records():
+    # Get arguments from URL
+    try:
+        page = int(request.args.get("page", 1))
+        size = int(request.args.get("size", 100))
+    except ValueError:
+        abort(400, description="Page and size must be valid integers.")
+
+    if page < 1 or size < 1: 
+        abort(400, description="Size and page arguments for record request endpoint cannot be less than 1.")
+
+    # Load data from dataframe into dictionary and convert to json
+    app_dataframe = app.config['ANALYSIS_DATAFRAME']
+    selected_rows: pd.DataFrame = pd.DataFrame()
+    if app_dataframe is not None:
+        app_dataframe: pd.DataFrame
+        start_index = (page - 1) * size + 1
+        end_index = page * size
+        selected_rows = app_dataframe.iloc[start_index:end_index]
+    else:
+        abort(400, description="No source file data present, to use this endpoint you must select source data.")
+
+    json_data = selected_rows.to_json(orient='records')
+
+    # Get metadata
+    # TODO: This should be done when getting the arguments, to avoid accessing index not present in dataframe
+    total_rows = len(app_dataframe)
+    total_pages = int(total_rows / size) + int(total_rows % size > 0)
+
+    # TODO: Build HATEOAS links
+    links = {}
+
+    response_data = {
+        "data": json_data,
+        "metadata": {
+            "page": page,
+            "size": size,
+            "total_rows": total_rows,
+            "total_pages": total_pages
+        },
+        "links": links
+    }
+
+    return jsonify(response_data)
+
+####################
 #### CALCULATORS ###
 ####################
 
