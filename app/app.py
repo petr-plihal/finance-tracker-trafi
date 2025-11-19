@@ -76,7 +76,7 @@ def download_file(name):
 import pandas as pd
 app.config['ANALYSIS_DATAFRAME'] = None
 
-from app.scripts.loading.csv_loader import CSVLoader
+from app.models.statement_manager import CSVLoader
 
 @app.route("/select_input", methods=["GET", "POST"])
 def select_input():

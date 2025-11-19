@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from app.scripts.loading.csv_loader import CSVLoader
+from app.models.statement_manager import CSVLoader
 
 def main():
 
