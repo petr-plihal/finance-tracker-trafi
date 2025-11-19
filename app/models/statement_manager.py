@@ -1,11 +1,24 @@
 import pandas as pd
 
 class StatementManager:
+    """
+    Manages the bank statement DataFrame, handling the initial loading, cleaning, and persistent storage of the main dataset.
 
+    Attributes:
+        file_path (str): The path to the CSV file used for loading the data.
+        dataframe (pd.DataFrame): Main DataFrame of bank transactions.
+    """
     file_path: str
     dataframe: pd.DataFrame
 
     def __init__(self, csv_path: str):
+        """
+        Initializes StatementManager by loading and cleaning the bank statement data from the specified CSV file.
+
+        **Only handles KB bank file format.**
+        Args:
+            csv_path (str): The full path to the bank statement CSV file.
+        """
 
         # Load data with minimal column set
         df = pd.read_csv(
@@ -49,4 +62,11 @@ class StatementManager:
         self.dataframe = df
 
     def get_dataframe(self) -> pd.DataFrame:
+        """
+        Returns main DataFrame itself.
+
+        **Original Dataframe returned - not a copy!**
+        Returns:
+            pd.DataFrame: Stored transaction DataFrame.
+        """
         return self.dataframe
