@@ -1,6 +1,6 @@
 import pandas as pd
 
-class CSVLoader:
+class StatementManager:
 
     file_path: str
     dataframe: pd.DataFrame

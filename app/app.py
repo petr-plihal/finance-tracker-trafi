@@ -76,7 +76,7 @@ def download_file(name):
 import pandas as pd
 app.config['ANALYSIS_DATAFRAME'] = None
 
-from app.models.statement_manager import CSVLoader
+from app.models.statement_manager import StatementManager
 
 @app.route("/select_input", methods=["GET", "POST"])
 def select_input():
@@ -92,7 +92,7 @@ def select_input():
             # NOTE: There should be a) validate file exists, b) logger
             print(f"User selected: {selected_filename} file as an input")
 
-            app.config['ANALYSIS_DATAFRAME'] = CSVLoader(app.config["UPLOAD_FOLDER"]+"/"+app.config["SELECTED_FILENAME"]).get_dataframe()
+            app.config['ANALYSIS_DATAFRAME'] = StatementManager(app.config["UPLOAD_FOLDER"]+"/"+app.config["SELECTED_FILENAME"]).get_dataframe()
         
         return redirect(url_for('select_input'))
 
