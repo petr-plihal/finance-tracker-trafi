@@ -1,12 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from app.scripts.loading.csv_loader import CSVLoader
+from app.models.statement_manager import StatementManager
 
 def main():
 
     # 1. Data Collection (Acquisition) & Data Cleaning (Preprocessing)
-    loader = CSVLoader("test_data/Vypis_354650030277_20240115_20250710.csv")
+    loader = StatementManager("test_data/Vypis_354650030277_20240115_20250710.csv")
     data = loader.get_dataframe()
 
     # 2. Data Transformation (Structuring)
