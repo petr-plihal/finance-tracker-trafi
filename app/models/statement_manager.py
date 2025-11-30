@@ -1,4 +1,8 @@
+"""Class for managing loaded bank statements"""
+import os
 import pandas as pd
+
+from app.exceptions import StatementFileNotFoundError, StatementFileEmptyError
 
 class StatementManager:
     """
@@ -19,6 +23,13 @@ class StatementManager:
         Args:
             csv_path (str): The full path to the bank statement CSV file.
         """
+
+        if not os.path.isfile(csv_path):
+            raise StatementFileNotFoundError(f"Statement file not found at path: {csv_path}")
+
+        # Input file should not be empty
+        if os.stat(csv_path).st_size == 0:
+            raise StatementFileEmptyError(f"Empty statement file passed at path: {csv_path}")
 
         # Load data with minimal column set
         df = pd.read_csv(
@@ -48,7 +59,7 @@ class StatementManager:
             df["date"],
             format="%d.%m.%Y",
             )
-        
+
         # Type cast amount column to numeric (floats)
         df["amount"] = df["amount"].replace(",", ".", regex=True)
         df["amount"] = pd.to_numeric(

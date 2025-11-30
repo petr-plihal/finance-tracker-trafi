@@ -21,3 +21,9 @@ class ValidationError(BaseCustomError):
     """Base class for user input / API argument issues."""
 
 # --------------------------------------------------------------
+
+class StatementFileNotFoundError(DataProcessingError):
+    """Raised when the specified statement file does not exist."""
+
+class StatementFileEmptyError(DataProcessingError):
+    """Raised when the specified statement file does not exist."""
