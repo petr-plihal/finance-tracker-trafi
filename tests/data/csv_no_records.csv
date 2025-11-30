@@ -1,0 +1,17 @@
+KB+, vypis v csv. formatu;;;;;;;;;;;;;;;;;;
+Datum vytvoreni souboru;04.07.2002;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;
+Cislo uctu;35-0123456789;;;;;;;;;;;;;;;;;
+Mena uctu / Hlavni mena uctu;CZK;;;;;;;;;;;;;;;;;
+Mena vypisu;;;;;;;;;;;;;;;;;;
+IBAN;CZ0000000000000000000022;;;;;;;;;;;;;;;;;
+Nazev uctu;JOHN DOE;;;;;;;;;;;;;;;;;
+Vypis od;04.07.2002;;;;;;;;;;;;;;;;;
+Vypis do;04.07.2003;;;;;;;;;;;;;;;;;
+Cislo vypisu;;;;;;;;;;;;;;;;;;
+Pocet polozek;1;;;;;;;;;;;;;;;;;
+Mena;CZK;EUR;USD;GBP;AUD;BGN;CAD;CHF;DKK;HUF;JPY;NOK;PLN;RON;SEK;;;
+Pocatecni zustatek;0,0;;;;;;;;;;;;;;;;;
+Konecny zustatek;10,0;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;
+Datum zauctovani;Datum provedeni;Protistrana;Nazev protiuctu;Castka;Mena;Originalni castka;Originalni mena;Smenny kurz;VS;KS;SS;Identifikace transakce;Typ transakce;Popis pro me;Zprava pro prijemce;Reference platby;BIC / SWIFT;Poplatek
