@@ -124,7 +124,7 @@ def get_records():
     else:
         abort(400, description="No source file data present, to use this endpoint you must select source data.")
 
-    json_data = selected_rows.to_json(orient='records')
+    json_data = selected_rows.to_json(orient='records', date_format='iso')
 
     # Get metadata
     # TODO: This should be done when getting the arguments, to avoid accessing index not present in dataframe
