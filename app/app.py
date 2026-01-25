@@ -8,7 +8,14 @@ from flask import url_for # Decoupling the internal function name from the exter
 ####################
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin-dev:password123@database:3306/trafi-dev"
+
+# Database
+from app.extensions import db
+# from app.models.database import Account
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 app.config["SELECTED_FILENAME"] = "" # TODO: Very bad, this means all users share the same file (after the first user defines this variable) ew
 
