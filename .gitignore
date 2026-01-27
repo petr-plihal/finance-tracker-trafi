@@ -184,5 +184,5 @@ cython_debug/
 # Directory for test data files
 test_data/*
 
-# Uploaded files
+# Directory for upload storage
 uploads/*

@@ -8,9 +8,73 @@ from flask import url_for # Decoupling the internal function name from the exter
 ####################
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin-dev:password123@database:3306/trafi-dev"
-
 app.config["SELECTED_FILENAME"] = "" # TODO: Very bad, this means all users share the same file (after the first user defines this variable) ew
+
+####################
+##### DATABASE #####
+####################
+from app.extensions import db
+from app.models.database import AccountType, Account, Currency, Category
+
+def seed_data():
+    currencies = [
+        {"code": "USD", "name": "US Dollar", "sign": "$"},
+        {"code": "EUR", "name": "Euro", "sign": "€"},
+        {"code": "JPY", "name": "Japanese Yen", "sign": "¥"},
+        {"code": "GBP", "name": "British Pound", "sign": "£"},
+        {"code": "AUD", "name": "Australian Dollar", "sign": "$"},
+        {"code": "CAD", "name": "Canadian Dollar", "sign": "$"},
+        {"code": "CHF", "name": "Swiss Franc", "sign": "CHF"},
+        {"code": "CNY", "name": "Chinese Yuan", "sign": "¥"},
+        {"code": "HKD", "name": "Hong Kong Dollar", "sign": "$"},
+        {"code": "NZD", "name": "New Zealand Dollar", "sign": "$"},
+        {"code": "CZK", "name": "Czech Koruna", "sign": "Kč"},
+    ]
+
+    for currency in currencies:
+        if not Currency.query.filter_by(code=currency["code"]).first():
+            new_currency = Currency(
+                code=currency["code"],
+                name=currency["name"],
+                sign=currency["sign"]
+            )
+            db.session.add(new_currency)
+
+    db.session.commit()
+    print("Currencies seeded successfully.")
+
+def seed_test_data():
+    if not Account.query.filter_by(name="Test Account").first():
+        test_account = Account(
+            name="Test Account", 
+            bank_name="Test Bank", 
+            account_number="IE64IRCE92050112345678", 
+            account_type=AccountType.DEPOSIT_ACCOUNT
+        )
+        db.session.add(test_account)
+
+    categories = [
+        {"name": "Housing"},
+        {"name": "Utilities"},
+        {"name": "Transport"},
+        {"name": "Groceries"}
+    ]
+    for category in categories:
+        if not Category.query.filter_by(name=category["name"]).first():
+            new_category = Category(
+                name=category["name"]
+            )
+            db.session.add(new_category)
+
+    db.session.commit()
+    print("Test development records seeded successfully.")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+    seed_data()
+    seed_test_data()
 
 ####################
 ##### MAIN PAGE ####
