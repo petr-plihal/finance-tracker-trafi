@@ -71,7 +71,7 @@ class Category(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key = True)
     name: Mapped[str] = mapped_column()
-    monthly_budget: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    monthly_budget: Mapped[Optional[Decimal]] = mapped_column(Numeric(10, 2))
 
     transactions: Mapped[List["Transaction"]] = relationship(back_populates = "category")
     category_rules: Mapped[List["CategoryRule"]] = relationship(
