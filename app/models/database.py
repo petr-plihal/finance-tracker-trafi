@@ -10,6 +10,7 @@ from decimal import Decimal
 from typing import List
 from typing import Optional
 from sqlalchemy import ForeignKey
+from sqlalchemy import UniqueConstraint
 from sqlalchemy import String
 from sqlalchemy import Numeric
 from sqlalchemy.orm import Mapped
@@ -115,6 +116,15 @@ class Transaction(db.Model):
     Keeps track of finance movement from one account to another.
     """
     __tablename__ = "transaction"
+    __table_args__ = (
+        UniqueConstraint(
+            "amount",
+            "date",
+            "contra_account_number",
+            "account_id",
+            name = "_transaction_unique_constraint"
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key = True)
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
