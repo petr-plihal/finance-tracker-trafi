@@ -41,12 +41,12 @@ class Account(db.Model):
     account_number: Mapped[str] = mapped_column(nullable = False)
     account_type: Mapped[AccountType] = mapped_column(
         db.Enum(AccountType),
-        default=AccountType.DEPOSIT_ACCOUNT
+        default = AccountType.DEPOSIT_ACCOUNT
     )
 
     transactions: Mapped[List["Transaction"]] = relationship(
         back_populates = "account",
-        cascade="all, delete-orphan"
+        cascade = "all, delete-orphan",
     )
 
 class Currency(db.Model):
@@ -77,7 +77,7 @@ class Category(db.Model):
     transactions: Mapped[List["Transaction"]] = relationship(back_populates = "category")
     category_rules: Mapped[List["CategoryRule"]] = relationship(
         back_populates = "category",
-        cascade="all, delete-orphan"
+        cascade = "all, delete-orphan"
     )
 
 class CategoryRuleMatchType(enum.Enum):
@@ -100,7 +100,7 @@ class CategoryRule(db.Model):
     keyword: Mapped[str] = mapped_column()
     match_type: Mapped[CategoryRuleMatchType] = mapped_column(
         db.Enum(CategoryRuleMatchType),
-        default=CategoryRuleMatchType.CONTAINS
+        default = CategoryRuleMatchType.CONTAINS
     )
 
     category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
@@ -127,9 +127,9 @@ class Transaction(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key = True)
-    amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
-    date: Mapped[datetime] = mapped_column(nullable=False, index=True)
-    contra_account_number: Mapped[str] = mapped_column(nullable = False, index=True)
+    amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable = False)
+    date: Mapped[datetime] = mapped_column(nullable = False, index = True)
+    contra_account_number: Mapped[str] = mapped_column(nullable = False, index = True)
     contra_account_name: Mapped[str] = mapped_column(nullable = False)
     my_description: Mapped[Optional[str]] = mapped_column()
     message: Mapped[Optional[str]] = mapped_column()
