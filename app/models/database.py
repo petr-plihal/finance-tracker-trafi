@@ -14,6 +14,7 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy import String
 from sqlalchemy import Numeric
 from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import MappedAsDataclass
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
@@ -27,7 +28,7 @@ class AccountType(enum.Enum):
     SAVINGS_ACCOUNT = "savings_account"
     OTHER = "other"
 
-class Account(db.Model):
+class Account(db.Model, MappedAsDataclass):
     """
     Bank account for which transactions were made. Should not contain non-user accounts - contra-accounts.
 
@@ -35,7 +36,7 @@ class Account(db.Model):
     """
     __tablename__ = "account"
 
-    id: Mapped[int] = mapped_column(primary_key = True)
+    id: Mapped[int] = mapped_column(primary_key = True, init = False)
     name: Mapped[str] = mapped_column()
     bank_name: Mapped[str] = mapped_column()
     account_number: Mapped[str] = mapped_column(nullable = False)
@@ -47,22 +48,26 @@ class Account(db.Model):
     transactions: Mapped[List["Transaction"]] = relationship(
         back_populates = "account",
         cascade = "all, delete-orphan",
+        init = False
     )
 
-class Currency(db.Model):
+class Currency(db.Model, MappedAsDataclass):
     """
     Currency in which a transaction has been made.
     """
     __tablename__ = "currency"
 
-    id: Mapped[int] = mapped_column(primary_key = True)
+    id: Mapped[int] = mapped_column(primary_key = True, init = False)
     name: Mapped[str] = mapped_column()
     sign: Mapped[str] = mapped_column()
     code: Mapped[str] = mapped_column(String(3))
 
-    transactions: Mapped[List["Transaction"]] = relationship(back_populates = "currency")
+    transactions: Mapped[List["Transaction"]] = relationship(
+        back_populates = "currency",
+        init = False
+    )
 
-class Category(db.Model):
+class Category(db.Model, MappedAsDataclass):
     """
     Category of transactions.
 
@@ -70,14 +75,18 @@ class Category(db.Model):
     """
     __tablename__ = "category"
 
-    id: Mapped[int] = mapped_column(primary_key = True)
+    id: Mapped[int] = mapped_column(primary_key = True, init = False)
     name: Mapped[str] = mapped_column()
-    monthly_budget: Mapped[Optional[Decimal]] = mapped_column(Numeric(10, 2))
+    monthly_budget: Mapped[Optional[Decimal]] = mapped_column(Numeric(10, 2), init = False)
 
-    transactions: Mapped[List["Transaction"]] = relationship(back_populates = "category")
+    transactions: Mapped[List["Transaction"]] = relationship(
+        back_populates = "category",
+        init = False
+    )
     category_rules: Mapped[List["CategoryRule"]] = relationship(
         back_populates = "category",
-        cascade = "all, delete-orphan"
+        cascade = "all, delete-orphan",
+        init = False
     )
 
 class CategoryRuleMatchType(enum.Enum):
@@ -90,7 +99,7 @@ class CategoryRuleMatchType(enum.Enum):
     EXACT = "exact"
     CONTAINS = "contains"
 
-class CategoryRule(db.Model):
+class CategoryRule(db.Model, MappedAsDataclass):
     """
     Rule that dictates what transactions should be included in the category.
     """
@@ -98,16 +107,18 @@ class CategoryRule(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key = True)
     keyword: Mapped[str] = mapped_column()
-    match_type: Mapped[CategoryRuleMatchType] = mapped_column(
-        db.Enum(CategoryRuleMatchType),
-        default = CategoryRuleMatchType.CONTAINS
-    )
-
-    category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
 
     category: Mapped[Category] = relationship(back_populates = "category_rules")
 
-class Transaction(db.Model):
+    match_type: Mapped[CategoryRuleMatchType] = mapped_column(db.Enum(CategoryRuleMatchType), default = CategoryRuleMatchType.CONTAINS)
+
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey("category.id"),
+        init = False,
+    )
+
+
+class Transaction(db.Model, MappedAsDataclass):
     """
     Any transfer of value involving a financial institution.
 
