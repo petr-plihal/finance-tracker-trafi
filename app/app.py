@@ -15,6 +15,7 @@ app.config["SELECTED_FILENAME"] = "" # TODO: Very bad, this means all users shar
 ####################
 from app.extensions import db
 from app.models.database import AccountType, Account, Currency, Category
+from sqlalchemy import select
 
 def seed_data():
     currencies = [
@@ -32,23 +33,22 @@ def seed_data():
     ]
 
     for currency in currencies:
-        if not Currency.query.filter_by(code=currency["code"]).first():
-            new_currency = Currency(
-                code=currency["code"],
-                name=currency["name"],
-                sign=currency["sign"]
-            )
+        stmt = select(Currency).filter_by(code=currency["code"])
+        exists = db.session.scalar(stmt)
+
+        if not exists:
+            new_currency = Currency(**currency)
             db.session.add(new_currency)
 
     db.session.commit()
     print("Currencies seeded successfully.")
 
 def seed_test_data():
-    if not Account.query.filter_by(name="Test Account").first():
+    if not db.session.scalar(select(Account).filter_by(name="Test Account")):
         test_account = Account(
-            name="Test Account", 
-            bank_name="Test Bank", 
-            account_number="IE64IRCE92050112345678", 
+            name="Test Account",
+            bank_name="Test Bank",
+            account_number="IE64IRCE92050112345678",
             account_type=AccountType.DEPOSIT_ACCOUNT
         )
         db.session.add(test_account)
@@ -60,11 +60,8 @@ def seed_test_data():
         {"name": "Groceries"}
     ]
     for category in categories:
-        if not Category.query.filter_by(name=category["name"]).first():
-            new_category = Category(
-                name=category["name"]
-            )
-            db.session.add(new_category)
+        if not db.session.scalar(select(Category).filter_by(name=category["name"])):
+            db.session.add(Category(**category))
 
     db.session.commit()
     print("Test development records seeded successfully.")

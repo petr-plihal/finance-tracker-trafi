@@ -19,6 +19,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from app.extensions import db
+from app.extensions import Base
 
 class AccountType(enum.Enum):
     """
@@ -28,7 +29,7 @@ class AccountType(enum.Enum):
     SAVINGS_ACCOUNT = "savings_account"
     OTHER = "other"
 
-class Account(db.Model, MappedAsDataclass):
+class Account(Base):
     """
     Bank account for which transactions were made. Should not contain non-user accounts - contra-accounts.
 
@@ -51,7 +52,7 @@ class Account(db.Model, MappedAsDataclass):
         init = False
     )
 
-class Currency(db.Model, MappedAsDataclass):
+class Currency(Base):
     """
     Currency in which a transaction has been made.
     """
@@ -67,7 +68,7 @@ class Currency(db.Model, MappedAsDataclass):
         init = False
     )
 
-class Category(db.Model, MappedAsDataclass):
+class Category(Base):
     """
     Category of transactions.
 
@@ -99,7 +100,7 @@ class CategoryRuleMatchType(enum.Enum):
     EXACT = "exact"
     CONTAINS = "contains"
 
-class CategoryRule(db.Model, MappedAsDataclass):
+class CategoryRule(Base):
     """
     Rule that dictates what transactions should be included in the category.
     """
@@ -118,7 +119,7 @@ class CategoryRule(db.Model, MappedAsDataclass):
     )
 
 
-class Transaction(db.Model, MappedAsDataclass):
+class Transaction(Base):
     """
     Any transfer of value involving a financial institution.
 
