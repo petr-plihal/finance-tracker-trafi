@@ -27,12 +27,6 @@ flask --app ./app/app.py run --debug
 
 The debug option allows for Python code execution from the browser, shows debug info in the browser and automatically refreshes when changes are made to code.
 
-## Generate ERD from database (after initialization od database)
-
-```bash
-eralchemy2 -i sqlite:///instance/project.db -o docs/erd.svg
-```
-
 # Useful sources used during development
 
 - [Flask documentation](https://flask.palletsprojects.com/en/stable/)
