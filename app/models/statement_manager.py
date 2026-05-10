@@ -2,6 +2,13 @@
 import os
 import pandas as pd
 
+from sqlalchemy import select
+from pandas import Timestamp
+from decimal import Decimal
+
+from app.extensions import db
+from app.models.database import Account, Currency, Transaction
+
 from app.exceptions import StatementFileNotFoundError, StatementFileEmptyError
 
 class StatementManager:
@@ -15,6 +22,7 @@ class StatementManager:
     """
     file_path: str
     dataframe: pd.DataFrame
+    dataframe_header: pd.DataFrame
 
     def __init__(self, csv_path: str):
         """
@@ -131,6 +139,83 @@ class StatementManager:
 
         # Save "Base" dataframe for later use
         self.dataframe = df
+
+    def store_statements(self, csv_path: str):
+        """
+        Loads, cleans and stores bank statement data to database from the specified CSV file.
+
+        Args:
+            csv_path (str): The full path to the bank statement CSV file.
+        """
+
+        self._validate_input_file(csv_path)
+        self.store_statements_first_time(csv_path)
+
+        # TODO: Outside of the need for making this code work with different csv formats, as of now the database does not take into account multiple users. Also, there should be a value validation.
+        csv_account_number: str = str(self.dataframe_header.iat[3,1])
+
+        db_account = select(Account).filter_by(account_number = csv_account_number)
+        account_exists = db.session.scalar(db_account)
+
+        if not account_exists:
+            db_account = Account(
+                name = "",
+                bank_name = "",
+                account_number = csv_account_number,
+            )
+            db.session.add(db_account)
+        else:
+            db_account = db.session.execute(db_account).scalar()
+
+
+        for transaction in self.dataframe.itertuples(name="Transaction"):
+
+            # Needs to be done since dataframe when broken into tuples does not keep track of item types -> this will be of type Timestamp, but there is no way for static analyzer to know that. Also we should exit if that is not the case.
+            print(type(transaction.date))
+            assert isinstance(transaction.date, Timestamp)
+
+            transaction_date = transaction.date.to_pydatetime()
+            transaction_amount = Decimal(pd.to_numeric(transaction.amount))
+
+            currency_code = str(transaction.currency)
+            db_currency = select(Currency).filter_by(code = currency_code)
+            currency_exists = db.session.scalar(db_currency)
+
+            if not currency_exists:
+                db_currency = Currency(
+                    name = "",
+                    sign = "",
+                    code = currency_code,
+                )
+                db.session.add(db_currency)
+            else:
+                db_currency = db.session.execute(db_currency).scalar()
+
+            transaction_exists = db.session.scalar(select(Transaction).filter_by(
+                amount = transaction.amount,
+                date = transaction.date,
+                contra_account_number = transaction.contra_account_number,
+                contra_account_name = transaction.contra_account_name,
+
+                account = db_account,
+                currency = db_currency,
+            ))
+
+            if not transaction_exists and db_account and db_currency:
+                new_transaction = Transaction(
+                    amount = transaction_amount,
+                    date = transaction_date,
+                    contra_account_number = str(transaction.contra_account_number),
+                    contra_account_name = str(transaction.contra_account_name),
+                    my_description = str(transaction.description_for_me),
+                    message = str(transaction.description_for_recipient),
+
+                    account = db_account,
+                    currency = db_currency
+                )
+                db.session.add(new_transaction)
+
+        db.session.commit()
 
     def get_dataframe(self) -> pd.DataFrame:
         """
