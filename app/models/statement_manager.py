@@ -24,34 +24,81 @@ class StatementManager:
         Args:
             csv_path (str): The full path to the bank statement CSV file.
         """
+        self.store_statements_first_time(csv_path)
 
-        if not os.path.isfile(csv_path):
-            raise StatementFileNotFoundError(f"Statement file not found at path: {csv_path}")
 
         # Input file should not be empty
-        if os.stat(csv_path).st_size == 0:
-            raise StatementFileEmptyError(f"Empty statement file passed at path: {csv_path}")
+    def store_statements_first_time(self, csv_path: str):
+        """
+        Loads and cleans first bank statement data from the specified CSV file into pandas dataframe.
 
+        Args:
+            csv_path (str): The full path to the bank statement CSV file.
+        """
+
+        self._validate_input_file(csv_path)
+
+        # TODO: The size of header should be separated into some sort of config variable.
         # Load data with minimal column set
         df = pd.read_csv(
             csv_path,
-            encoding="cp1250", # TODO: 
-            sep=';', 
+            encoding="cp1250",
+            sep=';',
             header=16,
             usecols=[
+                "Datum zauctovani",
                 "Datum provedeni",
+                "Protistrana",
                 "Nazev protiuctu",
                 "Castka",
-                "Identifikace transakce" # TODO: Is this really unique?
+                "Mena",
+                "Originalni castka",
+                "Originalni mena",
+                "Smenny kurz",
+                "VS",
+                "KS",
+                "SS",
+                "Identifikace transakce",
+                "Typ transakce",
+                "Popis pro me",
+                "Zprava pro prijemce",
+                "Reference platby",
+                "BIC / SWIFT",
+                "Poplatek",
             ]
         )
 
+        # Load additional data into separate dataframe
+        self.dataframe_header = pd.read_csv(
+            csv_path,
+            encoding="cp1250",
+            sep=';',
+            nrows=16,
+            header=None
+        )
+
         # Normalize the KB bank column names into internal column names
+        # NOTE: Maybe this could be separated into a "interface" to allow Pylint checking.
         norm_cols = {
-            "Datum provedeni": "date",
+            "Datum zauctovani": "posting_date",
+            "Datum provedeni": "date", # TODO: This should be renamed to be more descriptive/not "collide" with posting_date.
+            "Protistrana": "contra_account_number",
             "Nazev protiuctu": "contra_account_name",
             "Castka": "amount",
-            "Identifikace transakce": "transaction_id"
+            "Mena": "currency",
+            "Originalni castka": "original_amount",
+            "Originalni mena": "original_currency",
+            "Smenny kurz": "exchange_rate",
+            "VS": "variable_symbol",
+            "KS": "constant_symbol",
+            "SS": "specific_symbol",
+            "Identifikace transakce": "bank_transaction_id",
+            "Typ transakce": "transaction_type",
+            "Popis pro me": "description_for_me",
+            "Zprava pro prijemce": "description_for_recipient",
+            "Reference platby": "payment_reference",
+            "BIC / SWIFT": "bic_or_swift",
+            "Poplatek": "fee",
         }
         df = df.rename(columns=norm_cols)
 
