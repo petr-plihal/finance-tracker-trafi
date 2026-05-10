@@ -26,8 +26,20 @@ class StatementManager:
         """
         self.store_statements_first_time(csv_path)
 
+    def _validate_input_file(self, file_path: str):
+        """
+        Validates existence of input file and checks if it is empty.
+
+        Args:
+            file_path (str): Full path to the file.
+        """
+        if not os.path.isfile(file_path):
+            raise StatementFileNotFoundError(f"Statement file not found at path: {file_path}")
 
         # Input file should not be empty
+        if os.stat(file_path).st_size == 0:
+            raise StatementFileEmptyError(f"Empty statement file passed at path: {file_path}")
+
     def store_statements_first_time(self, csv_path: str):
         """
         Loads and cleans first bank statement data from the specified CSV file into pandas dataframe.
