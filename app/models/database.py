@@ -146,10 +146,10 @@ class Transaction(Base):
     my_description: Mapped[Optional[str]] = mapped_column()
     message: Mapped[Optional[str]] = mapped_column()
 
-    account_id: Mapped[int] = mapped_column(ForeignKey("account.id"))
-    currency_id: Mapped[int] = mapped_column(ForeignKey("currency.id"))
-    category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("category.id"))
+    account_id: Mapped[int] = mapped_column(ForeignKey("account.id"), init = False)
+    currency_id: Mapped[int] = mapped_column(ForeignKey("currency.id"), init = False)
+    category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("category.id"), init = False)
 
     account: Mapped[Account] = relationship(back_populates = "transactions")
     currency: Mapped[Currency] = relationship(back_populates = "transactions")
-    category: Mapped[Category] = relationship(back_populates = "transactions")
+    category: Mapped[Optional[Category]] = relationship(back_populates = "transactions", default = None)
