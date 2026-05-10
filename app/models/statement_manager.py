@@ -6,8 +6,9 @@ from app.exceptions import StatementFileNotFoundError, StatementFileEmptyError
 
 class StatementManager:
     """
-    Manages the bank statement DataFrame, handling the initial loading, cleaning, and persistent storage of the main dataset.
+    Manages the bank statement DataFrame, handling the initial loading, cleaning, and persistent storage.
 
+    **Only handles KB bank file format for inputs.**
     Attributes:
         file_path (str): The path to the CSV file used for loading the data.
         dataframe (pd.DataFrame): Main DataFrame of bank transactions.
