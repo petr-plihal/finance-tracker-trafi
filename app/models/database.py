@@ -138,8 +138,8 @@ class Transaction(Base):
         ),
     )
 
-    id: Mapped[int] = mapped_column(primary_key = True)
-    amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable = False)
+    id: Mapped[int] = mapped_column(primary_key = True, init = False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(19, 4), nullable = False) # TODO: Using decimal data types for storing amount is a terrible idea. Alternative might be to store the whole number and decimal portion separately.
     date: Mapped[datetime] = mapped_column(nullable = False, index = True)
     contra_account_number: Mapped[str] = mapped_column(nullable = False, index = True)
     contra_account_name: Mapped[str] = mapped_column(nullable = False)
