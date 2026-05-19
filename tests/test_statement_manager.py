@@ -1,12 +1,13 @@
 """Unit tests for StatementManager class"""
 import pytest
 
-from app.app import app as _app, db as _db
-
 from app.exceptions import StatementFileNotFoundError, StatementFileEmptyError
-from app.models.statement_manager import StatementManager
 
+from app.models.statement_manager import StatementManager
 from app.models.database import Transaction, Account, Currency
+
+from tests.fixtures import app, session
+
 from sqlalchemy import select
 
 class TestStatementManager:
@@ -51,30 +52,3 @@ class TestStatementManager:
 
         assert session.query(Account).count() >= 1
         assert session.query(Currency).count() >= 1
-
-@pytest.fixture
-def app():
-    _app.config.update({
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-    })
-
-    with _app.app_context():
-        _db.create_all()
-        yield _app
-        _db.drop_all()
-
-@pytest.fixture
-def session(app):
-    """Creates a new database session for a test."""
-    connection = _db.engine.connect()
-    transaction = connection.begin()
-
-    # Bind the session to the connection
-    session = _db.session
-
-    yield session
-
-    # Roll back everything after the test is done
-    session.remove()
-    transaction.rollback()
-    connection.close()
