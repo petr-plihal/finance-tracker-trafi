@@ -6,8 +6,6 @@ from app.exceptions import StatementFileNotFoundError, StatementFileEmptyError
 from app.models.statement_manager import StatementManager
 from app.models.database import Transaction, Account, Currency
 
-from tests.fixtures import app, session
-
 from sqlalchemy import select
 
 class TestStatementManager:
