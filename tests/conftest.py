@@ -32,7 +32,9 @@ def session(app):
     """
     Creates a new database session for a test.
     
-    Importantly, it rolls back 
+    Importantly, it rolls back any changes made. BUT only if they are not committed.
+
+    This fixture is mandatory for any unit tests interacting with database in any direct or indirect way.
     """
     connection = _db.engine.connect()
     transaction = connection.begin()
